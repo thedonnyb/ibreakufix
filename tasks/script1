@@ -1,0 +1,31 @@
+## Prompt
+Task 01 — Web server down
+The httpd service should be running now and start automatically on boot.
+Right now it does neither. Fix it.
+
+## Break
+
+# System will install httpd if not installed. Then stop any running instances and disable running in background 
+sudo dnf install -y httpd
+sudo systemctl stop httpd && sudo systemctl disable httpd
+
+## Variable 
+enabled=$(sudo systemctl is-enabled httpd)
+active=$(sudo systemctl is-active httpd)
+
+## Check
+ 
+$enabled = sudo systemctl is-enabled httpd
+$active = sudo systemctl is-active httpd
+
+# If user successfully allows httpd to run in background then reward them 1 point otherwise reward them 0 points 
+if sudo systemctl is-enabled httpd 
+then echo "Task 1.1: Pass -- httpd is enabled (+1)" | tee -a check.txt
+else echo "Task 1.1: Fail -- http not enabled (-1)" | tee -a check.txt 
+fi
+
+# If user successfully starts httpd then reward them 1 point otherwise reward them 0 points 
+if sudo systemctl is-active httpd
+then echo "Task 1.2:Pass -- httpd is active (+1)" | tee -a check.txt 
+else echo "Task 1.2: Fail -- httpd not active" | tee -a check.txt 
+fi

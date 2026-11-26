@@ -1,0 +1,37 @@
+#!/bin/bash
+
+Task 5:
+Change it to run every 3 days at 02:00, and move it into a file named
+/etc/cron.d/oddsched that reflects its new schedule. The old /etc/cron.d/daily
+file should no longer exist.
+
+# break
+
+# create system-wide daily cronjobs file, then print cron schedule inside. hide from terminal 
+echo '0 3 * * * root /usr/local/bin/backup.sh' | sudo tee /etc/cron.d/daily &>/dev/null
+
+# check
+file=oddsched
+# if file exists then mark +1 otherwise mark -1
+if [ -e /etc/cron.d/{$file} ];
+then 
+	echo "Task 5.1: Pass -- oddsched file exist (+1)" | tee -a check.txt
+else
+	echo "Task 5.1: Fail -- oddsched file does not exist (-1)"
+fi
+
+# find if new cronjob schedule was added correctly, then mark +1 otherwise mark -1
+if grep -qF "0 2 */3 * * root /usr/local/bin/backup.sh" /etc/cron.d/{$file} ;
+then 
+	echo "Task 5.2: Pass -- backup scheduled for every 3 days at 2AM (+1)" | tee -a check.txt
+else
+	echo "Task 5.2: FailNo backup scheduled" | tee -a check.txt
+fi
+
+# find if user cleared empty dir 
+if [ -e /etc/cron.d/daily ]
+then
+	echo "Task 5.3: Fail -- Daily folder still exist (-1)" | tee -a check.txt
+else
+	echo "Task 5.3: Pass -- All cron jobs are correctly organized" | tee -a check.txt
+fi

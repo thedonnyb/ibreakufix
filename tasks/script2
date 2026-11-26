@@ -1,0 +1,42 @@
+# Prompt 
+Task 02 — Locked-down directory
+The directory /srv/data must exist, be owned by root, and have permission mode 755.
+Right now its permissions are wrong. Fix them.
+
+## Break
+# create directory
+sudo mkdir /srv/data
+
+# set user:group and set permissions
+sudo chown spongebob:employees /srv/data && chmod 600 /srv/data
+
+## Variables
+file=/srv/data
+isuser=$(stat -c '%U' /srv/data)
+isperm=$(stat -c '%a' /srv/data)
+
+## Check
+
+# if $file exist and is a directory, then +1 otherwise -1
+if [ -d $file ]
+then 
+echo "Task 2.1:Pass -- $file exists (+1)" | tee -a check.txt
+else 
+echo "Task 2.1 Fail -- $file not found (-1)" | tee -a check.txt
+fi
+
+# If $file is owned by root then +1 otherwise -1
+if [ $isuser = 'root' ]
+then 
+echo "Task 2.2 Pass -- $file is owned by $isuser" >> check.txt && echo "$file is owned by $isuser"
+else 
+echo Task 2.2: Fail >> check.txt && echo "$file is not owned by root"
+fi
+
+# If $file has read,write and execute permission then +1 otherwise -1
+if [ $isperm = 755 ]
+then
+echo Task 2.3: Pass >> check.txt && echo "$file permission set to 755"
+else
+echo Task 2.3: Failed >> check.txt && echo "$file permissions set incorrect"
+fi

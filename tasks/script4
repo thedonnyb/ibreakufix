@@ -1,0 +1,33 @@
+```bash
+Task 04 — Firewall blocking the web server
+The firewall must permanently allow the 'http' service.
+# Right now it's blocked. Open it, and make sure the rule is active now and survives a reload.
+
+# break
+
+# List all exposed to firwall, quietly check if http is there, remove http exposure permanently 
+if sudo firewall-cmd --list-all | grep -qw http
+then
+sudo firewall-cmd --permanent --remove-service=http
+fi
+
+# reload firewall so changes apply now 
+sudo firewall-cmd --reload
+
+# Check
+
+# If http is not exposed to firewall then mark -1 otherwise mark +1
+if  ! sudo firewall-cmd --list-all | grep -qw http
+then
+echo Task 4.1: Fail >> check.txt && echo "Firewall is blocking http"
+else
+echo Task 4.1: Pass >> check.txt && echo "http will bypass firwall"
+fi
+
+# check if http has been exposed permanently to firewall, then mark +1 otherwise mark -1
+if sudo firewall-cmd --permanent --list-all | grep -qw http
+then 
+echo Task 4.2: Pass >> check.txt && echo "http will permanently bypass firewall"
+else
+echo Task 4.2: Fail >> check.txt && echo "http has not been added to firewall permanently"
+fi

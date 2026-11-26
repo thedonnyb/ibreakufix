@@ -1,23 +1,21 @@
 Task 03 — Missing developer account
-A user named jdoe must exist and belong to the supplementary group 'developers'.
+A user named '<name>'  must exist and belong to the supplementary group '<group>'.
 Right now the account is missing. Create it and fix its group membership
 
 ##  break
 
 #user=<username>
+#group=<groupname>
+
 
 # force add group. if already exist, then ignore
-groupadd -f developers
+groupadd -f $group
 
 # if $user exist, delete user
 if id $user &>/dev/null
 then
-userdel jdoe
+userdel $user
 fi 
-
-
-## Variable
-# user=<username>
 
 ## Check
 # if $user does not exist, -1 otherwise +1
@@ -29,9 +27,9 @@ echo "Task 3.1:Fail -- $user does not exist (-1)" | tee -a check.txt
 fi
 
 # if jdoe is a part of developers groups, +1 otherwise -1
-if id -Gn $user | grep -qw developers &>/dev/null
+if id -Gn $user | grep -qw $group
 then
-echo "Task 3.2: Pass -- $user has been added to developers group" | tee -a check.txt
+echo "Task 3.2: Pass -- $user has been added to $group group" | tee -a check.txt
 else
-echo "Task 3.2: Fail -- $user was never added to developers group" | tee -a check.txt
+echo "Task 3.2: Fail -- $user was never added to $group group" | tee -a check.txt
 fi.

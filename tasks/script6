@@ -1,0 +1,47 @@
+#!/bin/bash
+
+#Task 06 — Web content won't serve
+#httpd must serve files from /srv/www, but the directory isn't set up.
+
+#Set it up so that:
+#  1. /srv/www exists
+#  2. it is owned by root with permission mode 755
+#  3. it contains a file named index.html
+#  4. its SELinux context is set to httpd_sys_content_t
+
+Only when all four are correct will Apache actually serve the content.
+
+# break
+sudo dnf install -f httpd
+
+#variable
+isperm=$(stat -c '%a'/srv/www)
+
+# check
+if [-d /srv/www]
+then
+echo "Task 6.1: Pass -- /srv/www created (+1)" | tee -a check.txt
+else
+echo "Task 6.1: Fail -- /srv/www not found (-1)" | tee -a check.txt
+fi
+
+if [ $isperm = 755 ]
+then 
+echo "Task 6.2: Pass -- /srv/www has $isperm permission" | tee -a check.txt
+else
+echo "Task 6.2: Failed -- /srv/www has $isperm permission" | tee -a check.txt
+fi
+
+if [ -f /srv/www/index.hml ]
+then
+echo "Task 6.3: Pass -- index.html created" | tee -a check.txt
+else
+echo "Task 6.3: Fail -- index.html not found (-1)" | tee -a check.txt
+fi
+
+if ls -Zd /srv/www | grep -wq "http_sys_content_t"
+then 
+	echo "Task 6.4: Pass -- Security for /srv/www set correctly (+1)" | tee -a check.txt
+else
+	echo "Task 6.5: Fail -- /srv/www security set incorrectly (-1)" | tee -a check.txt
+fi
